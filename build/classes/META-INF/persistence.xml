@@ -3,6 +3,8 @@
 	<persistence-unit name="safeboda">
 	<jta-data-source>jdbc/safeboda</jta-data-source>
 	<class>models.Location</class>
+	<class>models.Event</class>
+	<class>models.PromoCode</class>
 	<properties>
 	<property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
 	</properties>

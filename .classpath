@@ -13,5 +13,9 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/home/fvelkov/eclipse-workspace/SafeBoda/libs/gson-2.8.5.jar"/>
+	<classpathentry kind="lib" path="/home/fvelkov/eclipse-workspace/SafeBoda/libs/junit-4.13-beta-2.jar"/>
+	<classpathentry kind="lib" path="/home/fvelkov/eclipse-workspace/SafeBoda/libs/hamcrest-core-2.1.jar"/>
+	<classpathentry kind="lib" path="/home/fvelkov/eclipse-workspace/SafeBoda/libs/mockito-core-1.10.19.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

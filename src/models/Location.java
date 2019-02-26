@@ -1,6 +1,8 @@
 package models;
 
 import java.io.Serializable;
+import java.util.List;
+
 import javax.persistence.*;
 
 /**
@@ -17,6 +19,8 @@ public class Location implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
+	@OneToMany(mappedBy = "location")
+	private List<Event> events;
 	private String name;
 	private String description;
 	private Double longitude;
