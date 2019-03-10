@@ -5,13 +5,19 @@ import java.util.Date;
 
 import javax.persistence.*;
 
+import services.EventSubject;
+import services.PromoCodeObserver;
+
 /**
  * Entity implementation class for Entity: PromoCode
  *
  */
 @Entity
+@NamedQuery(name = "PromoCode.getAll", query = "SELECT p FROM PromoCode p")
+@NamedQuery(name = "PromoCode.getActive", query = "SELECT p FROM PromoCode p WHERE p.active = true")
+@NamedQuery(name = "PromoCode.getById", query = "SELECT p FROM PromoCode p WHERE p.id = :id")
 
-public class PromoCode implements Serializable {
+public class PromoCode implements Serializable, PromoCodeObserver {
 
 	@Transient
 	private static final long serialVersionUID = 1L;
@@ -30,6 +36,7 @@ public class PromoCode implements Serializable {
 	private Date endDate;
 	private Boolean active;
 	private Double radius;
+	//
 
 	public PromoCode() {
 		super();
@@ -49,6 +56,8 @@ public class PromoCode implements Serializable {
 
 	public void setEvent(Event event) {
 		this.event = event;
+		this.event.registerObserver(this);
+		this.updateValidity(event);
 	}
 
 	public String getCode() {
@@ -65,6 +74,7 @@ public class PromoCode implements Serializable {
 
 	public void setAmount(Integer amount) {
 		this.amount = amount;
+		this.updateValidity(this.event);
 	}
 
 	public Date getStartDate() {
@@ -73,6 +83,7 @@ public class PromoCode implements Serializable {
 
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
+		this.updateValidity(this.event);
 	}
 
 	public Date getEndDate() {
@@ -81,6 +92,9 @@ public class PromoCode implements Serializable {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+		this.updateValidity(this.event);
+		if (this.endDate.after(new Date()))
+			this.active = false;
 	}
 
 	public Boolean getActive() {
@@ -99,6 +113,18 @@ public class PromoCode implements Serializable {
 		this.radius = radius;
 	}
 	
+	public boolean updateValidity(EventSubject eventSubject) {
+		if (eventSubject == null) return false;
+		if (this.getStartDate() == null || this.getEndDate() == null) return false;
+		Event event = (Event)eventSubject;
+		boolean isActive = this.getStartDate().after(event.getStartDate()) && 
+				this.getEndDate().before(event.getEndDate());
+		if (amount != null)
+			isActive = isActive && this.getAmount() > 0;
+		this.setActive(isActive);
+		return isActive;
+		
+	}
 	
    
 }

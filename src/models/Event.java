@@ -1,10 +1,15 @@
 package models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
+
+import services.EventSubject;
+import services.Observer;
+import services.PromoCodeObserver;
 
 /**
  * Entity implementation class for Entity: Event
@@ -12,7 +17,7 @@ import javax.persistence.*;
  */
 @Entity
 
-public class Event implements Serializable {
+public class Event implements Serializable, EventSubject {
 
 	@Transient
 	private static final long serialVersionUID = 1L;
@@ -31,9 +36,13 @@ public class Event implements Serializable {
 	private Date startDate;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endDate;
+	//
+	@Transient
+	private List<Observer> observers;
 	
 	public Event() {
 		super();
+		this.observers = new ArrayList<Observer>();
 	}
 
 	public Integer getId() {
@@ -74,6 +83,10 @@ public class Event implements Serializable {
 
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
+		for (Observer o : this.observers) {
+			PromoCodeObserver pco = (PromoCodeObserver)o;
+			pco.updateValidity(this);
+		}
 	}
 
 	public Date getEndDate() {
@@ -82,8 +95,23 @@ public class Event implements Serializable {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+		for (Observer o : this.observers) {
+			PromoCodeObserver pco = (PromoCodeObserver)o;
+			pco.updateValidity(this);
+		}
 	}
 	
+	public void registerObserver(Observer o) {
+		this.observers.add(o);
+	}
+	
+	public void removeObserver(Observer o) {
+		this.observers.remove(o);
+	}
+	
+	public List<Observer> getObservers() {
+		return this.observers;
+	}
 	
    
 }
