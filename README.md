@@ -1,6 +1,6 @@
 # SafeBoda
 
-A sample application that validates Promo Codes based on the origin and the destination of the desired trip.
+A sample Java EE application that validates Promo Codes based on the origin and the destination of the desired trip.
 
 It is structured in a MVC way, with controllers exposed as SERVLETS API endpoints, services exposed as EJB entities that handle the logic of the whole application and store data into the database and models exposed as JPA objects that are stored themselves in the database.
 
